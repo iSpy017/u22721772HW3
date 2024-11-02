@@ -1,0 +1,141 @@
+﻿@model List<u22721772_HW3.Models.ReportModel>
+
+@{
+    ViewBag.Title = "Popular Books Report";
+}
+
+<style>
+    #saveButton {
+        position: relative;
+        top: 25px;
+    }
+
+    body {
+        background: rgb(2,0,36);
+        background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(148,148,173,1) 22%, rgba(42,180,228,1) 80%);
+    }
+</style>
+
+<h2 style="text-align:center ">Popular Books Report</h2>
+
+
+<div class="card">
+    <div class="card-body">
+        <canvas id="reportChart" width="400" height="200"></canvas>
+
+
+        <div class="container">
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="filename">File Name:</label>
+                        <input type="text" id="filename" class="form-control" placeholder="Enter file name">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="filetype">File Type:</label>
+                        <select id="filetype" class="form-control">
+                            <option value="pdf">PDF</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="filetype">&nbsp;</label>
+                        <button id="saveButton" class="btn btn-primary" onclick="exportChartToPDF()">Save</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Filename</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fileTable">
+                        <!-- Table content will be added dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+
+<script>
+    var reportData = @Html.Raw(Json.Encode(Model));
+    var bookTitles = reportData.map(function (item) { return item.BookTitle; });
+    var borrowCounts = reportData.map(function (item) { return item.BorrowCount; });
+
+    var ctx = document.getElementById('reportChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: bookTitles,
+            datasets: [{
+                label: 'Borrow Count',
+                data: borrowCounts,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    function exportChartToPDF() {
+        var filename = document.getElementById('filename').value;
+        var fileType = document.getElementById('filetype').value;
+
+        // Create a PDF document
+        var docDefinition = {
+            content: [{
+                image: document.getElementById('reportChart').toDataURL(),
+                width: 500,
+            }],
+        };
+
+        // Generate a PDF
+        pdfMake.createPdf(docDefinition).download(filename + '.' + fileType);
+
+        // Add the filename to the table
+        var tableRow = document.createElement('tr');
+        var filenameCell = document.createElement('td');
+        filenameCell.innerText = filename + '.' + fileType;
+        var actionsCell = document.createElement('td');
+        var downloadButton = document.createElement('a');
+        downloadButton.href = filename + '.' + fileType;
+        downloadButton.download = filename + '.' + fileType;
+        downloadButton.innerText = 'Download';
+        downloadButton.classList.add('btn', 'btn-primary', 'mr-2'); // Add Bootstrap classes and spacing
+
+        var deleteButton = document.createElement('button');
+        deleteButton.innerText = 'Delete';
+        deleteButton.classList.add('btn', 'btn-danger', 'ml-2'); // Add Bootstrap classes and spacing
+        deleteButton.onclick = function () {
+            // Implement file deletion logic here if needed
+            // For example, you can use AJAX to delete the file from the server.
+            tableRow.remove();
+        };
+        actionsCell.appendChild(downloadButton);
+        actionsCell.appendChild(deleteButton);
+
+        tableRow.appendChild(filenameCell);
+        tableRow.appendChild(actionsCell);
+
+        document.getElementById('fileTable').appendChild(tableRow);
+    }
+</script>

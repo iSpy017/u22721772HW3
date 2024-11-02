@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>jsreport.Shared</name>
+    </assembly>
+    <members>
+        <member name="M:jsreport.Shared.EnumHelper.GetAttributeOfType``1(System.Enum)">
+            <summary>
+            Gets an attribute on an enum field value
+            </summary>
+            <typeparam name="T">The type of the attribute you want to retrieve</typeparam>
+            <param name="enumVal">The enum value</param>
+            <returns>The attribute of type T that exists on the enum value</returns>
+            <example><![CDATA[string desc = myEnumVariable.GetAttributeOfType<DescriptionAttribute>().Description;]]></example>
+        </member>
+        <member name="M:jsreport.Shared.IRenderService.RenderAsync(jsreport.Types.RenderRequest,System.Threading.CancellationToken)">
+            <summary>
+            Specify comnpletely the rendering requests, see http://jsreport.net/learn/api for details
+            </summary>
+            <param name="request">ram name="request">Description of rendering process <see cref="T:jsreport.Types.RenderRequest"/></param>
+            <exception cref="!:JsReportException"></exception>
+            <returns>Report result promise</returns>
+        </member>
+        <member name="M:jsreport.Shared.IRenderService.RenderAsync(System.String,System.Object,System.Threading.CancellationToken)">
+            <summary>
+            The simpliest rendering using template shortid and input data
+            </summary>
+            <param name="templateShortid">template shortid can be taken from jsreport studio or from filename in jsreport embedded</param>
+            <param name="data">any json serializable object</param>
+            <exception cref="!:JsReportException"></exception>
+            <returns>Report result promise</returns>
+        </member>
+        <member name="M:jsreport.Shared.IRenderService.RenderByNameAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            The simpliest rendering using template name and input data
+            </summary>
+            <param name="templateName">template shortid can be taken from jsreport studio or from filename in jsreport embedded</param>
+            <param name="jsonData">any json string</param>
+            <exception cref="!:JsReportException"></exception>
+            <returns>Report result promise</returns>
+        </member>
+        <member name="M:jsreport.Shared.IRenderService.RenderByNameAsync(System.String,System.Object,System.Threading.CancellationToken)">
+            <summary>
+            The simpliest rendering using template name and input data
+            </summary>
+            <param name="templateName">template name</param>
+            <param name="data">any json serializable object</param>
+            <exception cref="!:JsReportException"></exception>
+            <returns>Report result promise</returns>
+        </member>
+        <member name="M:jsreport.Shared.IRenderService.RenderAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            The simpliest rendering using template shortid and input data
+            </summary>
+            <param name="templateShortid">template shortid can be taken from jsreport studio or from filename in jsreport embedded</param>
+            <param name="jsonData">any json string</param>
+            <exception cref="!:JsReportException"></exception>
+            <returns>Report result promise</returns>
+        </member>
+        <member name="M:jsreport.Shared.IRenderService.RenderAsync(System.Object,System.Threading.CancellationToken)">
+            <summary>
+            Specify comnpletely the rendering requests, see http://jsreport.net/learn/api for details
+            </summary>
+            <param name="request">ram name="request">Description of rendering process</param>
+            <exception cref="!:JsReportException"></exception>
+            <returns>Report result promise</returns>
+        </member>
+    </members>
+</doc>

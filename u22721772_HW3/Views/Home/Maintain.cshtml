@@ -1,0 +1,243 @@
+﻿@model u22721772_HW3.Models.MaintainViewModel
+@using PagedList;
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Maintain";
+}
+
+<style>
+
+
+    body {
+        background: rgb(2,0,36);
+        background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(148,148,173,1) 22%, rgba(42,180,228,1) 80%);
+    }
+
+    .pg {
+        text-align: center;
+    }
+
+    h2 {
+        text-align: center;
+    }
+
+    .pagination {
+        display: inline-block;
+        margin: 10px 0;
+        text-align: center;
+    }
+
+        .pagination a {
+            color: #007bff;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+            display: inline-block;
+            margin: 2px;
+        }
+
+            .pagination a.active {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+            .pagination a:hover:not(.active) {
+                background-color: #ddd;
+            }
+
+        .pagination li {
+            display: inline;
+        }
+
+
+    .table-card {
+        background-color: #f8f9fa;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        padding: 20px;
+    }
+
+    .headings {
+        background-color: rgba(42,180,228,1);
+    }
+
+
+
+    .table {
+        text-align: center;
+    }
+</style>
+
+
+
+<div class="card table-card">
+    <h2>Author</h2>
+    <p>
+        <a href="javascript:void(0);" class="btn btn-outline-primary open-modal" data-url="@Url.Action("Create", "authors")">Create New Author</a>
+    </p>
+    <table class="table table-bordered">
+        <tr class="headings">
+            <th>
+                Name
+            </th>
+            <th>
+                Surname
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.authors)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.surname)
+                </td>
+                <td>
+                    <a href="javascript:void(0);" class="btn btn-primary open-modal" data-url="@Url.Action("Edit", "authors", new { id = item.authorId })">Edit</a>
+                    <a href="javascript:void(0);" class="btn btn-success open-modal" data-url="@Url.Action("Details", "authors", new { id = item.authorId })">Details</a>
+                    <a href="javascript:void(0);" class="btn btn-danger open-modal" data-url="@Url.Action("Delete", "authors", new { id = item.authorId })">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+    <div class="pg">
+        @Html.PagedListPager(Model.authors, page => Url.Action("Maintain", new { authorPage = page }))
+    </div>
+</div>
+
+<div class="card table-card" style="border-radius: 10px;">
+    <h2>Types</h2>
+    <p>
+        <a href="javascript:void(0);" class="btn btn-outline-primary open-modal" data-url="@Url.Action("Create", "types")">Create New Type</a>
+    </p>
+    <table class="table table-bordered">
+        <tr class="headings">
+            <th>
+                Name
+            </th>
+            <th>Actions</th>
+        </tr>
+
+        @foreach (var item in Model.types)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    <a href="javascript:void(0);" class="btn btn-primary open-modal" data-url="@Url.Action("Edit", "types", new { id = item.typeId })">Edit</a>
+                    <a href="javascript:void(0);" class="btn btn-success open-modal" data-url="@Url.Action("Details", "types", new { id = item.typeId })">Details</a>
+                    <a href="javascript:void(0);" class="btn btn-danger open-modal" data-url="@Url.Action("Delete", "types", new { id = item.typeId })">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+    <div class="pg">
+        @Html.PagedListPager(Model.types, page => Url.Action("Maintain", new { typesPage = page }))
+    </div>
+</div>
+
+<div class="card table-card">
+    <h2>Borrows</h2>
+    <p>
+        <a href="javascript:void(0);" class="btn btn-outline-primary open-modal" data-url="@Url.Action("Create", "borrows")">Create New Borrow</a>
+    </p>
+    <table class="table table-bordered">
+        <tr class="headings">
+            <th>
+                Taken Date
+            </th>
+            <th>
+                Brought Date
+            </th>
+            <th>
+                Book Name
+            </th>
+            <th>
+                Student Name
+            </th>
+            <th>Actions</th>
+        </tr>
+
+        @foreach (var item in Model.borrows)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.takenDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.broughtDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.book.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.student.name)
+                </td>
+                <td>
+                    <a href="javascript:void(0);" class="btn btn-primary open-modal" data-url="@Url.Action("Edit", "borrows", new { id = item.borrowId })">Edit</a>
+                    <a href="javascript:void(0);" class="btn btn-success open-modal" data-url="@Url.Action("Details", "borrows", new { id = item.borrowId })">Details</a>
+                    <a href="javascript:void(0);" class="btn btn-danger open-modal" data-url="@Url.Action("Delete", "borrows", new { id = item.borrowId })">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+    <div class="pg">
+        @Html.PagedListPager(Model.borrows, page => Url.Action("Maintain", new { borrowsPage = page }))
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="itemModalLabel">Item Details</h4>
+            </div>
+            <div class="modal-body">
+                <div id="modalContent">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+        $(document).ready(function () {
+            $(".open-modal").on("click", function () {
+                var url = $(this).data("url");
+                $.get(url, function (data) {
+                    $("#modalContent").html(data);
+                    $("#itemModal").modal("show");
+                });
+            });
+
+            $("#itemModal").on("hidden.bs.modal", function () {
+                $("#modalContent").html("");
+            });
+        });
+
+        $("#modalContent").on("submit", "form", function (e) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr("action");
+            var formData = form.serialize();
+
+            $.post(url, formData, function (data) {
+                $("#myModal").modal("hide");
+                location.reload();
+            });
+        });
+</script>

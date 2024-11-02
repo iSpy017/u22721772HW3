@@ -1,0 +1,185 @@
+﻿@model u22721772_HW3.Models.HomeViewModel
+@using PagedList;
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Assuming you have a layout
+}
+
+
+<style>
+    body {
+        background: rgb(2,0,36);
+        background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(148,148,173,1) 22%, rgba(42,180,228,1) 80%);
+    }
+
+    .pagination {
+        display: inline-block;
+        margin: 10px 0;
+    }
+
+    .heading {
+        background-color: rgba(42,180,228,1);
+    }
+
+
+    .pagination a {
+        color: #007bff;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+    }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
+
+    .pagination li {
+        display: inline;
+    }
+</style>
+<div class="content">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Student -->
+                    <h3>Students</h3>
+                    <p>
+                        <a href="javascript:void(0);" class="btn btn-outline-primary open-modal" data-url="@Url.Action("Create", "Students")">Create New Students</a>
+                    </p>
+                    <table class="table table-bordered">
+                        <tr class="heading">
+                            <th>Name</th>
+                            <th>Surname</th>
+                            <th>Birthdate</th>
+                            <th>Gender</th>
+                            <th>Class</th>
+                            <th>Point</th>
+                        </tr>
+                        @foreach (var student in Model.Students)
+                        {
+                            <tr>
+                                <td>@student.name</td>
+                                <td>@student.surname</td>
+                                <td>@student.birthdate</td>
+                                <td>@student.gender</td>
+                                <td>@Html.DisplayFor(modelItem => student.@class)</td>
+                                <td>@student.point</td>
+                            </tr>
+                        }
+                    </table>
+                    <!-- Student Table pagedlist here -->
+                    @Html.PagedListPager(Model.Students, page => Url.Action("Index", new { studentPage = page }))
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Books -->
+                    <h3>Books</h3>
+                    <p>
+                        <a href="javascript:void(0);" class="btn btn-outline-primary open-modal" data-url="@Url.Action("Create", "books")">Create New Book</a>
+                    </p>
+                    <table class="table table-bordered">
+                        <tr class="heading">
+                            <th>Name</th>
+                            <th>Page Count</th>
+                            <th>Point</th>
+                            <th>Author</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                        </tr>
+                        @foreach (var book in Model.Books)
+                        {
+                            var latestBorrow = book.borrows.OrderByDescending(b => b.takenDate).FirstOrDefault();
+                            if (latestBorrow != null)
+                            {
+                                var isBookOut = latestBorrow.broughtDate == null || latestBorrow.broughtDate > DateTime.Now;
+                                <tr>
+                                    <td>@book.name</td>
+                                    <td>@book.pagecount</td>
+                                    <td>@book.point</td>
+                                    <td>@book.author.name</td>
+                                    <td>@book.type.name</td>
+                                    <td>@(isBookOut ? "Out" : "Available")</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>@book.name</td>
+                                    <td>@book.pagecount</td>
+                                    <td>@book.point</td>
+                                    <td>@book.author.name</td>
+                                    <td>@book.type.name</td>
+                                    <td>Available</td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                    <!-- Booking Table pagedlist here -->
+                    @Html.PagedListPager(Model.Books, page => Url.Action("Index", new { bookPage = page }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="itemModalLabel">Item Details</h4>
+            </div>
+            <div class="modal-body">
+                <div id="modalContent">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+        $(document).ready(function () {
+            $(".open-modal").on("click", function () {
+                var url = $(this).data("url");
+                $.get(url, function (data) {
+                    $("#modalContent").html(data);
+                    $("#itemModal").modal("show");
+                });
+            });
+
+            $("#itemModal").on("hidden.bs.modal", function () {
+                $("#modalContent").html("");
+            });
+        });
+
+        $("#modalContent").on("submit", "form", function (e) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr("action");
+            var formData = form.serialize();
+
+            $.post(url, formData, function (data) {
+                $("#myModal").modal("hide");
+                location.reload();
+            });
+        });
+</script>
+
+
